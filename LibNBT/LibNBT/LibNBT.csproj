@@ -54,6 +54,7 @@
     <Compile Include="TagEnd.cs" />
     <Compile Include="TagFloat.cs" />
     <Compile Include="TagInt.cs" />
+    <Compile Include="TagIntArray.cs" />
     <Compile Include="TagList.cs" />
     <Compile Include="TagLong.cs" />
     <Compile Include="TagShort.cs" />

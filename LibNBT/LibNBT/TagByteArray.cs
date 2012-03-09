@@ -69,5 +69,10 @@ namespace LibNBT
         {
             WriteByteArray(output, Value);
         }
+
+        public override string ToString(string indentString)
+        {
+            return String.Format("{0}[Byte_Array: {1}={2} Bytes", indentString, Name, (Value != null)?Value.Length:0);
+        }
     }
 }

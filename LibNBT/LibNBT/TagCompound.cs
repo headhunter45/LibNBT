@@ -7,7 +7,7 @@ using System.IO.Compression;
 
 namespace LibNBT
 {
-    public class TagCompound: AbstractTag
+    public class TagCompound : AbstractTag
     {
         private Dictionary<String, AbstractTag> _dictionary;
 
@@ -77,57 +77,146 @@ namespace LibNBT
 
         public TagByte GetByte(String name)
         {
-            return _dictionary[name] as TagByte;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagByte;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagByteArray GetByteArray(String name)
         {
-            return _dictionary[name] as TagByteArray;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagByteArray;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagCompound GetCompound(String name)
         {
-            return _dictionary[name] as TagCompound;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagCompound;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagDouble GetDouble(String name)
         {
-            return _dictionary[name] as TagDouble;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagDouble;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagFloat GetFloat(String name)
         {
-            return _dictionary[name] as TagFloat;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagFloat;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagInt GetInt(String name)
         {
-            return _dictionary[name] as TagInt;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagInt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public TagIntArray GetIntArray(String name)
+        {
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagIntArray;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagList GetList(String name)
         {
-            return _dictionary[name] as TagList;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagList;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagLong GetLong(String name)
         {
-            return _dictionary[name] as TagLong;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagLong;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagShort GetShort(String name)
         {
-            return _dictionary[name] as TagShort;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagShort;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public TagString GetString(String name)
         {
-            return _dictionary[name] as TagString;
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name] as TagString;
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public AbstractTag GetAbstractTag(String Name)
+        public AbstractTag GetAbstractTag(String name)
         {
-            return _dictionary[Name];
+            if (_dictionary.ContainsKey(name))
+            {
+                return _dictionary[name];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void WriteToFile(String filename)
@@ -146,14 +235,26 @@ namespace LibNBT
             WriteCompound(output, this);
         }
 
-        public static AbstractTag ReadFromFile(String filename)
+        public override string ToString(string indentString)
         {
-            using (FileStream input = File.Open(filename, FileMode.Open))
+            StringBuilder sb = new StringBuilder();
+
+            if (_dictionary.Keys.Count == 0)
             {
-                using (GZipStream gzipStream = new GZipStream(input, CompressionMode.Decompress)){
-                    return AbstractTag.Read(gzipStream);
-                }
+                return String.Format("{0}[Compound: {1}]", indentString, Name);
             }
+
+            sb.AppendLine(String.Format("{0}[Compound: {1}", indentString, Name));
+
+            foreach (string key in _dictionary.Keys)
+            {
+                sb.AppendLine(String.Format("{0}  {1}={2}", indentString, key, _dictionary[key].ToString(indentString + "  ").Trim()));
+            }
+
+            sb.AppendLine(String.Format("{0}]", indentString));
+
+            return sb.ToString();
         }
     }
 }
+ 

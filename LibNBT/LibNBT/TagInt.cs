@@ -73,5 +73,10 @@ namespace LibNBT
         {
             WriteInt(output, Value);
         }
+
+        public override string ToString(string indentString)
+        {
+            return String.Format("{0}[Int: {1}={2}]", indentString, Name, Value);
+        }
     }
 }

@@ -72,5 +72,10 @@ namespace LibNBT
         {
             WriteFloat(output, Value);
         }
+
+        public override string ToString(string indentString)
+        {
+            return String.Format("{0}[Float: {1}={2}]", indentString, Name, Value);
+        }
     }
 }
