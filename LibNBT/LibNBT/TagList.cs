@@ -97,6 +97,9 @@ namespace LibNBT
                     case TagType.Int:
                         tag = TagInt.ReadUnnamedTagInt(input);
                         break;
+                    case TagType.IntArray:
+                        tag = TagIntArray.ReadUnnamedTagIntArray(input);
+                        break;
                     case TagType.List:
                         tag = TagList.ReadUnnamedTagList(input);
                         break;
@@ -131,6 +134,27 @@ namespace LibNBT
         public override void WriteUnnamed(Stream output)
         {
             WriteList(output, Value);
+        }
+
+        public override string ToString(string indentString)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (Value.Count == 0)
+            {
+                return String.Format("{0}[List: {1}]", indentString, Name);
+            }
+
+            sb.AppendLine(String.Format("{0}[List: {1}", indentString, Name));
+
+            foreach (AbstractTag item in _value)
+            {
+                sb.AppendLine(String.Format("{0}  {1}", indentString, item.ToString(indentString + "  ").Trim()));
+            }
+
+            sb.AppendLine(String.Format("{0}]", indentString));
+
+            return sb.ToString();
         }
     }
 }

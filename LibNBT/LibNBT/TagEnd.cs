@@ -25,5 +25,10 @@ namespace LibNBT
         public static TagEnd Singleton = new TagEnd();
 
         public override void WriteUnnamed(Stream output){}
+
+        public override string ToString(string indentString)
+        {
+            return String.Format("{0}[End]", indentString);
+        }
     }
 }

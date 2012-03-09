@@ -71,7 +71,7 @@ namespace LibNBT_Tests
         [TestMethod]
         public void TestLoadSimpleNbt()
         {
-            String filename = @"..\..\..\LibNBT Tests\test.nbt";
+            String filename = @"..\..\..\LibNBT Tests\Data\test.nbt";
             AbstractTag tag = TagCompound.ReadFromFile(filename);
 
             Assert.IsNotNull(tag);
@@ -88,7 +88,7 @@ namespace LibNBT_Tests
         [TestMethod]
         public void TestLoadComplexNbt()
         {
-            String filename = @"..\..\..\LibNBT Tests\bigtest.nbt";
+            String filename = @"..\..\..\LibNBT Tests\Data\bigtest.nbt";
             AbstractTag tag = TagCompound.ReadFromFile(filename);
 
             Assert.IsNotNull(tag);
@@ -211,7 +211,7 @@ namespace LibNBT_Tests
         [TestMethod]
         public void TestSave()
         {
-            String filename = @"..\..\..\LibNBT Tests\bigtest.nbt";
+            String filename = @"..\..\..\LibNBT Tests\Data\bigtest.nbt";
             TagCompound tag = TagCompound.ReadFromFile(filename) as TagCompound;
 
             MemoryStream ms = new MemoryStream();
@@ -228,12 +228,113 @@ namespace LibNBT_Tests
             Assert.AreEqual<int>(-1, gzStream.ReadByte());
             byte[] buffer2 = ms.GetBuffer();
 
-            FileStream fs2 = File.OpenWrite(@"..\..\..\LibNBT Tests\savetest.raw");
+            FileStream fs2 = File.OpenWrite(@"..\..\..\LibNBT Tests\Data\savetest.raw");
             fs2.Write(buffer2, 0, (int)ms.Length);
             for (long i = 0; i < ms.Length; i++)
             {
                 Assert.AreEqual<byte>(buffer[i], buffer2[i]);
             }
+        }
+
+        [TestMethod]
+        public void TestAnvilRegion()
+        {
+            String filename = @"..\..\..\LibNBT Tests\Data\r.0.0.mca";
+            FileStream input = File.OpenRead(filename);
+            int[] locations = new int[1024];
+            byte[] buffer = new byte[4096];
+            input.Read(buffer, 0, 4096);
+            for (int i = 0; i < 1024; i++)
+            {
+                locations[i] = BitConverter.ToInt32(buffer, i * 4);
+            }
+
+            int[] timestamps = new int[1024];
+            input.Read(buffer, 0, 4096);
+            for (int i = 0; i < 1024; i++)
+            {
+                timestamps[i] = BitConverter.ToInt32(buffer, i * 4);
+            }
+
+            input.Read(buffer, 0, 4);
+            if (BitConverter.IsLittleEndian)
+            {
+                BitHelper.SwapBytes(buffer, 0, 4);
+            }
+            int sizeOfChunkData = BitConverter.ToInt32(buffer, 0) - 1;
+
+            int compressionType = input.ReadByte();
+            buffer = new byte[sizeOfChunkData];
+            input.Read(buffer, 0, sizeOfChunkData);
+
+            Stream inputStream = null;
+            
+            if(compressionType == 1){
+                inputStream = new GZipStream(new MemoryStream(buffer), CompressionMode.Decompress);
+            }else if(compressionType == 2){
+                inputStream = new DeflateStream(new MemoryStream(buffer, 2, buffer.Length - 6), CompressionMode.Decompress);
+            }
+
+            TagCompound tag = AbstractTag.Read(inputStream) as TagCompound;
+            string strTag = tag.ToString();
+
+            Assert.IsNotNull(tag);
+
+            Assert.AreEqual<TagType>(TagType.Compound, tag.GetAbstractTag("Level").Type);
+            TagCompound levelTag = tag.GetCompound("Level");
+
+            AbstractTag aTag = levelTag.GetAbstractTag("Entities");
+            Assert.AreEqual<TagType>(TagType.List, aTag.Type);
+            TagList entitiesTag = aTag as TagList;
+            Assert.AreEqual<int>(0, entitiesTag.Value.Count);
+
+            aTag = levelTag.GetAbstractTag("Biomes");
+            Assert.AreEqual<TagType>(TagType.ByteArray, aTag.Type);
+            TagByteArray biomesTag = aTag as TagByteArray;
+            Assert.AreEqual<int>(256, biomesTag.Value.Length);
+
+            aTag = levelTag.GetAbstractTag("LastUpdate");
+            Assert.AreEqual<TagType>(TagType.Long, aTag.Type);
+            TagLong lastUpdateTag = aTag as TagLong;
+            Assert.AreEqual<long>(2861877, lastUpdateTag.Value);
+
+            aTag = levelTag.GetAbstractTag("xPos");
+            Assert.AreEqual<TagType>(TagType.Int, aTag.Type);
+            TagInt xPosTag = aTag as TagInt;
+            Assert.AreEqual<int>(10, xPosTag.Value);
+
+            aTag = levelTag.GetAbstractTag("zPos");
+            Assert.AreEqual<TagType>(TagType.Int, aTag.Type);
+            TagInt zPosTag = aTag as TagInt;
+            Assert.AreEqual<int>(0, zPosTag.Value);
+
+            aTag = levelTag.GetAbstractTag("TileEntities");
+            Assert.AreEqual<TagType>(TagType.List, aTag.Type);
+            TagList tileEntitiesTag = aTag as TagList;
+            Assert.AreEqual<int>(0, tileEntitiesTag.Value.Count);
+
+            aTag = levelTag.GetAbstractTag("TerrainPopulated");
+            Assert.AreEqual<TagType>(TagType.Byte, aTag.Type);
+            TagByte terrainPopulatedTag = aTag as TagByte;
+            Assert.AreEqual<byte>(1, terrainPopulatedTag.Value);
+        }
+
+        [TestMethod]
+        public void TestReadNonExistantTagFromCompound()
+        {
+            String filename = @"..\..\..\LibNBT Tests\Data\test.nbt";
+
+            TagCompound newTag = new TagCompound();
+
+            AbstractTag aTag = newTag.GetAbstractTag("nope");
+
+            Assert.IsNull(aTag);
+
+            TagCompound fileTag = AbstractTag.ReadFromFile(filename) as TagCompound;
+
+            aTag = fileTag.GetAbstractTag("Entities");
+
+            Assert.IsNull(aTag);
         }
     }
 }

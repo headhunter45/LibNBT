@@ -53,13 +53,13 @@
     <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bigtest.nbt" />
-    <None Include="bigtest.raw" />
-    <None Include="savetest.raw" />
-    <None Include="test.nbt" />
+    <None Include="Data\bigtest.nbt" />
+    <None Include="Data\bigtest.raw" />
+    <None Include="Data\r.0.0.mca" />
+    <None Include="Data\test.nbt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NBT.txt" />
+    <Content Include="Docs\NBT.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibNBT\LibNBT.csproj">

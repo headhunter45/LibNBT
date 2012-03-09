@@ -7,7 +7,7 @@ using System.IO.Compression;
 
 namespace LibNBT
 {
-    public enum TagType{End, Byte, Short, Int, Long, Float, Double, ByteArray, String, List, Compound};
+    public enum TagType{End=0, Byte=1, Short=2, Int=3, Long=4, Float=5, Double=6, ByteArray=7, String=8, List=9, Compound=10, IntArray=11};
 
     public abstract class AbstractTag
     {
@@ -52,5 +52,77 @@ namespace LibNBT
                     throw new NotImplementedException();
             }
         }
+
+        public static AbstractTag ReadFromGzippedFile(String filename)
+        {
+            using (FileStream input = File.OpenRead(filename))
+            {
+                using (GZipStream gzipStream = new GZipStream(input, CompressionMode.Decompress))
+                {
+                    return AbstractTag.Read(gzipStream);
+                }
+            }
+        }
+
+        public static AbstractTag ReadFromFile(String filename)
+        {
+            AbstractTag tag = null;
+            //Check if gzipped stream
+            try
+            {
+                using (FileStream input = File.OpenRead(filename))
+                {
+                    using (GZipStream gzipStream = new GZipStream(input, CompressionMode.Decompress))
+                    {
+                        tag = AbstractTag.Read(gzipStream);
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                tag = null;
+            }
+
+            if (tag != null)
+            {
+                return tag;
+            }
+
+            //Try Deflate stream
+            try
+            {
+                using (FileStream input = File.OpenRead(filename))
+                {
+                    using (DeflateStream deflateStream = new DeflateStream(input, CompressionMode.Decompress))
+                    {
+                        tag = AbstractTag.Read(deflateStream);
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                tag = null;
+            }
+
+            if (tag != null)
+            {
+                return tag;
+            }
+
+            //Assume uncompressed stream
+            using (FileStream input = File.OpenRead(filename))
+            {
+                tag = AbstractTag.Read(input);
+            }
+
+            return tag;
+        }
+
+        public override string ToString()
+        {
+            return ToString(String.Empty);
+        }
+
+        public abstract string ToString(string indentString);
     }
 }
