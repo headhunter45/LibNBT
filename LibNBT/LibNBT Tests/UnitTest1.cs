@@ -317,6 +317,90 @@ namespace LibNBT_Tests
             Assert.AreEqual<TagType>(TagType.Byte, aTag.Type);
             TagByte terrainPopulatedTag = aTag as TagByte;
             Assert.AreEqual<byte>(1, terrainPopulatedTag.Value);
+
+            aTag = levelTag.GetAbstractTag("HeightMap");
+            Assert.AreEqual<TagType>(TagType.IntArray, aTag.Type);
+            TagIntArray heightmapTag = aTag as TagIntArray;
+            Assert.AreEqual<int>(256, heightmapTag.Value.Length);
+
+            aTag = levelTag.GetAbstractTag("Sections");
+            Assert.AreEqual<TagType>(TagType.List, aTag.Type);
+            TagList sectionsTag = aTag as TagList;
+            Assert.AreEqual<int>(4, sectionsTag.Value.Count);
+
+            TagCompound section_0 = sectionsTag.Value[0] as TagCompound;
+            Assert.IsNotNull(section_0);
+            TagByteArray section_0_data = section_0.GetByteArray("Data");
+            Assert.IsNotNull(section_0_data);
+            Assert.AreEqual<int>(2048, section_0_data.Value.Length);
+            TagByteArray section_0_skyLight = section_0.GetByteArray("SkyLight");
+            Assert.IsNotNull(section_0_skyLight);
+            Assert.AreEqual<int>(2048, section_0_skyLight.Value.Length);
+            TagByteArray section_0_blockLight = section_0.GetByteArray("BlockLight");
+            Assert.IsNotNull(section_0_blockLight);
+            Assert.AreEqual<int>(2048, section_0_blockLight.Value.Length);
+            TagByte section_0_y = section_0.GetByte("Y");
+            Assert.IsNotNull(section_0_y);
+            Assert.AreEqual<byte>(0, section_0_y.Value);
+            TagByteArray section_0_blocks = section_0.GetByteArray("Blocks");
+            Assert.IsNotNull(section_0_blocks);
+            Assert.AreEqual<int>(4096, section_0_blocks.Value.Length);
+
+            TagCompound section_1 = sectionsTag.Value[1] as TagCompound;
+            Assert.IsNotNull(section_1);
+            TagByteArray section_1_data = section_1.GetByteArray("Data");
+            Assert.IsNotNull(section_1_data);
+            Assert.AreEqual<int>(2048, section_1_data.Value.Length);
+            TagByteArray section_1_skyLight = section_1.GetByteArray("SkyLight");
+            Assert.IsNotNull(section_1_skyLight);
+            Assert.AreEqual<int>(2048, section_1_skyLight.Value.Length);
+            TagByteArray section_1_blockLight = section_1.GetByteArray("BlockLight");
+            Assert.IsNotNull(section_1_blockLight);
+            Assert.AreEqual<int>(2048, section_1_blockLight.Value.Length);
+            TagByte section_1_y = section_1.GetByte("Y");
+            Assert.IsNotNull(section_1_y);
+            Assert.AreEqual<byte>(1, section_1_y.Value);
+            TagByteArray section_1_blocks = section_1.GetByteArray("Blocks");
+            Assert.IsNotNull(section_1_blocks);
+            Assert.AreEqual<int>(4096, section_1_blocks.Value.Length);
+
+            TagCompound section_2 = sectionsTag.Value[2] as TagCompound;
+            Assert.IsNotNull(section_2);
+            TagByteArray section_2_data = section_2.GetByteArray("Data");
+            Assert.IsNotNull(section_2_data);
+            Assert.AreEqual<int>(2048, section_2_data.Value.Length);
+            TagByteArray section_2_skyLight = section_2.GetByteArray("SkyLight");
+            Assert.IsNotNull(section_2_skyLight);
+            Assert.AreEqual<int>(2048, section_2_skyLight.Value.Length);
+            TagByteArray section_2_blockLight = section_2.GetByteArray("BlockLight");
+            Assert.IsNotNull(section_2_blockLight);
+            Assert.AreEqual<int>(2048, section_2_blockLight.Value.Length);
+            TagByte section_2_y = section_2.GetByte("Y");
+            Assert.IsNotNull(section_2_y);
+            Assert.AreEqual<byte>(2, section_2_y.Value);
+            TagByteArray section_2_blocks = section_2.GetByteArray("Blocks");
+            Assert.IsNotNull(section_2_blocks);
+            Assert.AreEqual<int>(4096, section_2_blocks.Value.Length);
+
+            TagCompound section_3 = sectionsTag.Value[3] as TagCompound;
+            Assert.IsNotNull(section_3);
+            TagByteArray section_3_data = section_3.GetByteArray("Data");
+            Assert.IsNotNull(section_3_data);
+            Assert.AreEqual<int>(2048, section_3_data.Value.Length);
+            TagByteArray section_3_skyLight = section_3.GetByteArray("SkyLight");
+            Assert.IsNotNull(section_3_skyLight);
+            Assert.AreEqual<int>(2048, section_3_skyLight.Value.Length);
+            TagByteArray section_3_blockLight = section_3.GetByteArray("BlockLight");
+            Assert.IsNotNull(section_3_blockLight);
+            Assert.AreEqual<int>(2048, section_3_blockLight.Value.Length);
+            TagByte section_3_y = section_3.GetByte("Y");
+            Assert.IsNotNull(section_3_y);
+            Assert.AreEqual<byte>(3, section_3_y.Value);
+            TagByteArray section_3_blocks = section_3.GetByteArray("Blocks");
+            Assert.IsNotNull(section_3_blocks);
+            Assert.AreEqual<int>(4096, section_3_blocks.Value.Length);
+            
+
         }
 
         [TestMethod]

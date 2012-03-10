@@ -62,11 +62,11 @@ namespace LibNBT
 
             int[] ints = new int[length];
             for(int i=0; i<length; i++){
-                if(!BitConverter.IsLittleEndian){
-                    BitHelper.SwapBytes(buffer, length*4, 4);
+                if(BitConverter.IsLittleEndian){
+                    BitHelper.SwapBytes(buffer, i*4, 4);
                 }
 
-                ints[i] = BitConverter.ToInt32(buffer, length*4);
+                ints[i] = BitConverter.ToInt32(buffer, i*4);
             }
 
             buffer = null;

@@ -51,16 +51,12 @@ namespace LibNBT
         {
             Dictionary<String, AbstractTag> dict = new Dictionary<String, AbstractTag>();
             AbstractTag tag = AbstractTag.Read(input);
-            try
+            while (tag.Type != TagType.End)
             {
-                while (tag.Type != TagType.End)
-                {
-                    dict[tag.Name] = tag;
-                    tag = AbstractTag.Read(input);
-                }
+                dict[tag.Name] = tag;
+                tag = AbstractTag.Read(input);
             }
-            catch (Exception) { }
-
+            
             return dict;
         }
 
