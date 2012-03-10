@@ -34,6 +34,8 @@ namespace LibNBT
                     return new TagShort(input);
                 case TagType.Int:
                     return new TagInt(input);
+                case TagType.IntArray:
+                    return new TagIntArray(input);
                 case TagType.Long:
                     return new TagLong(input);
                 case TagType.Float:
