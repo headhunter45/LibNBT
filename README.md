@@ -8,3 +8,11 @@ If you need a different license put create a feature request on the issue tracke
 I didn't see a way to add more licenses but you can also use the source under cc-by-sa.
 
 I'll update if there are bugs, but this is pretty much done.
+
+# Usage
+The api is pretty obvious, but here's a head start.
+
+If you want to load from a file use the static method TagCompound.ReadFromFile(filename).
+If you want to safe to a file use the instance method TagCompound.WriteToFile(filename).
+
+Also for streams use TagCompound.Write and AbstractTag.Read.
